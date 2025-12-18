@@ -1,0 +1,158 @@
+pfSense OpenVPN Remote Access — Full Setup Sequence
+This document provides a complete, repeatable, and error‑proof sequence for deploying OpenVPN Remote Access on pfSense.
+It is written for long‑term reference and future reuse.
+
+1. Prerequisites
+pfSense installed and accessible
+
+WAN/LAN configured
+
+Correct time & NTP
+
+Internal DNS server reachable (optional but recommended)
+
+Admin access to pfSense Web GUI
+
+2. Create Certificate Authority (CA)
+System → Cert. Manager → CAs → Add
+
+Descriptive Name: MyLab-CA
+
+Method: Create internal Certificate Authority
+
+Key Length: 4096
+
+Digest: SHA256
+
+Save
+
+3. Create OpenVPN Server Certificate
+System → Cert. Manager → Certificates → Add
+
+Method: Create an internal certificate
+
+Certificate Type: Server Certificate
+
+Certificate Authority: MyLab-CA
+
+Common Name: OpenVPN-Server
+
+Save
+
+4. Create OpenVPN Server
+VPN → OpenVPN → Servers → Add
+
+General
+Server Mode: Remote Access (User Auth)
+
+Backend: Local Database
+
+Protocol: UDP
+
+Device Mode: tun
+
+Interface: WAN
+
+Port: 1194
+
+Cryptography
+TLS Key: Auto-generate
+
+Peer CA: MyLab-CA
+
+Server Certificate: OpenVPN-Server
+
+DH Parameters: 2048
+
+Auth Digest: SHA256
+
+Encryption: AES-256-GCM
+
+Tunnel Settings
+Tunnel Network: 10.10.10.0/24
+
+Local Network: 192.168.1.0/24
+
+Redirect Gateway: Optional
+
+DNS Push
+DNS Server 1: 192.168.1.10
+
+DNS Domain: mylab.test
+
+Client Settings
+Dynamic IP: Enabled
+
+Address Pool: Enabled
+
+Topology: Subnet
+
+Save & Apply.
+
+5. Firewall Rules
+WAN Rule (auto-created)
+Allow UDP 1194 → pfSense WAN address
+
+OpenVPN Rule
+Firewall → Rules → OpenVPN → Add
+
+Action: Pass
+
+Protocol: Any
+
+Source: OpenVPN net
+
+Destination: LAN net
+
+Save & Apply
+
+6. Create VPN User
+System → User Manager → Add
+
+Username: vpnuser
+
+Password: strong
+
+Create Certificate → Yes
+
+Certificate Authority: MyLab-CA
+
+Certificate Type: User Certificate
+
+Save
+
+7. Export Client Configuration
+Install package:
+
+System → Package Manager → Available Packages → openvpn-client-export
+
+Then:
+
+VPN → OpenVPN → Client Export
+
+Select user: vpnuser
+
+Export Windows Installer or .ovpn file
+
+8. Client Setup
+On Windows:
+
+Install OpenVPN
+
+Import .ovpn
+
+Connect
+
+Verify IP: 10.10.10.x
+
+9. Connectivity Tests
+Ping pfSense LAN
+
+Ping Domain Controller
+
+nslookup internal FQDN
+
+RDP to internal servers
+
+End of Sequence
+This sequence ensures a stable, production‑grade OpenVPN deployment on pfSense.
