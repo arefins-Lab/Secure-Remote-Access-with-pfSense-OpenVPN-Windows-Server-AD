@@ -1,0 +1,70 @@
+pfSense OpenVPN — End‑to‑End Validation Checklist
+Use this checklist to confirm that OpenVPN is fully functional and ready for production or demonstration.
+
+1. VPN Tunnel Validation
+[ ] Client receives 10.10.10.x IP
+
+[ ] Tunnel established without errors
+
+[ ] OpenVPN logs show successful authentication
+
+2. Routing Validation
+From VPN client:
+
+[ ] Ping pfSense LAN IP (e.g., 192.168.1.1)
+
+[ ] Ping internal servers (e.g., 192.168.1.10)
+
+[ ] Traceroute shows traffic flowing through VPN
+
+3. DNS Validation
+From VPN client:
+
+[ ] nslookup DC-SRV01.mylab.test resolves correctly
+
+[ ] Internal DNS server (192.168.1.10) is being used
+
+[ ] FQDN resolution works for all internal hosts
+
+4. Firewall Validation
+On pfSense:
+
+[ ] WAN rule allows UDP 1194
+
+[ ] OpenVPN tab has Allow Any rule
+
+[ ] No block logs for OpenVPN traffic
+
+5. Authentication Validation
+[ ] User certificate valid
+
+[ ] User credentials accepted
+
+[ ] No TLS handshake failures
+
+6. Application-Level Validation
+From VPN client:
+
+[ ] RDP to DC works
+
+[ ] RDP to ADC works
+
+[ ] SMB shares accessible
+
+[ ] AD authentication works
+
+[ ] Internal web apps reachable (if any)
+
+7. Stability Validation
+[ ] Reconnect test successful
+
+[ ] No packet loss
+
+[ ] No DNS leak
+
+[ ] No routing conflicts
+
+8. Final Confirmation
+If all boxes are checked:
+
+OpenVPN is fully operational, stable, and production‑ready.
