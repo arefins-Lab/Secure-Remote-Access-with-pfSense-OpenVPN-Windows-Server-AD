@@ -1,0 +1,22 @@
+Repository Structure:
+
+
+pfSense-OpenVPN/
+│
+├── config/
+│   └── config.xml
+│
+├── scripts/
+│   ├── infrastructure-setup.ps1
+│   └── pfsense-openvpn-setup.sh
+│
+├── documentation/
+│   ├── vpn-setup-sequence.md
+│   └── validation-checklist.md
+│
+├── diagrams/
+│   ├── network-topology.png
+│   ├── openvpn-flow.png
+│   └── firewall-rules.png
+│
+└── README.md
